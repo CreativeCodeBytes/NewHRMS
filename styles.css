@@ -1,0 +1,254 @@
+:root {
+  --primary-color: #4e73df;
+  --secondary-color: #858796;
+  --success-color: #1cc88a;
+  --info-color: #36b9cc;
+  --warning-color: #f6c23e;
+  --danger-color: #e74a3b;
+  --light-color: #f8f9fc;
+  --dark-color: #5a5c69;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  background-color: #f8f9fc;
+}
+
+.primary-text {
+  color: var(--primary-color);
+}
+
+.second-text {
+  color: var(--secondary-color);
+}
+
+#wrapper {
+  overflow-x: hidden;
+  background-image: linear-gradient(to right, #f8f9fc, #f1f3f9);
+}
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  transition: margin 0.25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+#menu-toggle {
+  cursor: pointer;
+}
+
+.list-group-item {
+  border: none;
+  padding: 20px 30px;
+}
+
+.list-group-item.active {
+  background-color: transparent;
+  color: var(--primary-color);
+  font-weight: bold;
+  border: none;
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.card-header {
+  background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+}
+
+.card-header h5 {
+  color: var(--primary-color);
+}
+
+.profile-card {
+  background: linear-gradient(to right, #31423b, #838ca4);
+  color: white;
+}
+
+.profile-card .card-body {
+  padding: 2rem;
+  height: 470px;
+}
+
+.profile-card img {
+  border: 4px solid white;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.stats-list .stat-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-item .label {
+  color: var(--secondary-color);
+  font-size: 0.875rem;
+}
+
+.summary-item .value {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.progress-info i {
+  margin-right: 4px;
+}
+
+.form-section {
+  margin: 20px;
+  display: none;
+}
+
+.form-section.active {
+  display: block;
+}
+
+#attendanceChart {
+  max-width: 100%;
+  height: auto;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+#profileImage {
+  object-fit: cover;
+}
+
+.blockquote {
+  font-size: 1rem;
+  border-left: 3px solid var(--primary-color);
+  padding-left: 1rem;
+}
+
+.blockquote-footer {
+  font-size: 0.875rem;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link {
+  color: var(--secondary-color);
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: #2e59d9;
+  border-color: #2e59d9;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.bg-gradient-primary {
+  background-color: var(--primary-color);
+  background-image: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+}
+
+.bg-gradient-secondary {
+  background-color: var(--secondary-color);
+  background-image: linear-gradient(180deg, var(--secondary-color) 10%, #60616f 100%);
+}
+
+.bg-gradient-success {
+  background-color: var(--success-color);
+  background-image: linear-gradient(180deg, var(--success-color) 10%, #13855c 100%);
+}
+
+.bg-gradient-info {
+  background-color: var(--info-color);
+  background-image: linear-gradient(180deg, var(--info-color) 10%, #2a96a5 100%);
+}
+
+.bg-gradient-warning {
+  background-color: var(--warning-color);
+  background-image: linear-gradient(180deg, var(--warning-color) 10%, #dda20a 100%);
+}
+
+.bg-gradient-danger {
+  background-color: var(--danger-color);
+  background-image: linear-gradient(180deg, var(--danger-color) 10%, #be2617 100%);
+}
+
+.list-group-item-action:hover {
+  background-color: #f8f9fc;
+}
+
+.dropdown-item:active {
+  background-color: var(--primary-color);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(78, 115, 223, 0.05);
+}
+

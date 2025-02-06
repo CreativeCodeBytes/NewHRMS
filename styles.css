@@ -57,13 +57,18 @@ body {
 .list-group-item {
   border: none;
   padding: 20px 30px;
+  transition: all 0.3s ease;
 }
 
 .list-group-item.active {
-  background-color: transparent;
+  background-color: rgba(78, 115, 223, 0.1);
   color: var(--primary-color);
   font-weight: bold;
-  border: none;
+  border-left: 4px solid var(--primary-color);
+}
+
+.list-group-item:hover {
+  background-color: rgba(78, 115, 223, 0.05);
 }
 
 @media (min-width: 768px) {
@@ -85,25 +90,33 @@ body {
   border: none;
   border-radius: 10px;
   box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
 }
 
 .card-header {
   background-color: #f8f9fc;
   border-bottom: 1px solid #e3e6f0;
+  padding: 1rem 1.25rem;
 }
 
 .card-header h5 {
   color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 0;
 }
 
 .profile-card {
-  background: linear-gradient(to right, #31423b, #838ca4);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
 
 .profile-card .card-body {
   padding: 2rem;
-  height: 470px;
 }
 
 .profile-card img {
@@ -126,7 +139,7 @@ body {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
@@ -149,15 +162,6 @@ body {
   margin-right: 4px;
 }
 
-.form-section {
-  margin: 20px;
-  display: none;
-}
-
-.form-section.active {
-  display: block;
-}
-
 #attendanceChart {
   max-width: 100%;
   height: auto;
@@ -169,6 +173,11 @@ body {
 
 #profileImage {
   object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+#profileImage:hover {
+  transform: scale(1.05);
 }
 
 .blockquote {
@@ -183,25 +192,30 @@ body {
 
 .badge {
   font-weight: 500;
+  padding: 0.5em 0.75em;
 }
 
 .nav-tabs .nav-link {
   color: var(--secondary-color);
+  transition: all 0.3s ease;
 }
 
 .nav-tabs .nav-link.active {
   color: var(--primary-color);
   font-weight: bold;
+  border-bottom: 2px solid var(--primary-color);
 }
 
 .btn-primary {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
   background-color: #2e59d9;
   border-color: #2e59d9;
+  transform: translateY(-2px);
 }
 
 .alert-success {
@@ -211,37 +225,19 @@ body {
 }
 
 .bg-gradient-primary {
-  background-color: var(--primary-color);
-  background-image: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
-}
-
-.bg-gradient-secondary {
-  background-color: var(--secondary-color);
-  background-image: linear-gradient(180deg, var(--secondary-color) 10%, #60616f 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
 }
 
 .bg-gradient-success {
-  background-color: var(--success-color);
-  background-image: linear-gradient(180deg, var(--success-color) 10%, #13855c 100%);
+  background: linear-gradient(135deg, var(--success-color) 0%, #13855c 100%);
 }
 
 .bg-gradient-info {
-  background-color: var(--info-color);
-  background-image: linear-gradient(180deg, var(--info-color) 10%, #2a96a5 100%);
+  background: linear-gradient(135deg, var(--info-color) 0%, #2a96a5 100%);
 }
 
 .bg-gradient-warning {
-  background-color: var(--warning-color);
-  background-image: linear-gradient(180deg, var(--warning-color) 10%, #dda20a 100%);
-}
-
-.bg-gradient-danger {
-  background-color: var(--danger-color);
-  background-image: linear-gradient(180deg, var(--danger-color) 10%, #be2617 100%);
-}
-
-.list-group-item-action:hover {
-  background-color: #f8f9fc;
+  background: linear-gradient(135deg, var(--warning-color) 0%, #dda20a 100%);
 }
 
 .dropdown-item:active {
@@ -250,5 +246,168 @@ body {
 
 .table-hover tbody tr:hover {
   background-color: rgba(78, 115, 223, 0.05);
+}
+
+/* Punch In/Out styles */
+#punchButton {
+  font-size: 1.2rem;
+  padding: 10px 30px;
+  transition: all 0.3s ease;
+}
+
+#punchButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+#punchStatus,
+#punchDateTime,
+#punchTime {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+#punchTime {
+  font-weight: bold;
+}
+
+#selfieContainer {
+  margin-top: 20px;
+}
+
+#video,
+#selfieImage {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+#captureButton {
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+#captureButton:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: -100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  .card-deck {
+    display: block;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Improve form styles */
+.form-control {
+  border-radius: 0.5rem;
+  border: 1px solid #d1d3e2;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #bac8f3;
+  box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Improve button styles */
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Improve card styles */
+.card {
+  overflow: hidden;
+}
+
+.card-header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Improve list group styles */
+.list-group-item:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.list-group-item:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+
+/* #attendanceRecords {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.attendance-date {
+  font-weight: bold;
+  margin-top: 10px;
+  padding: 5px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.attendance-record {
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.attendance-record img {
+  margin-top: 5px;
+} */
+
+#attendanceRecords .table img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+#attendanceRecords .table {
+  font-size: 0.9rem;
+}
+
+#attendanceRecords .table th {
+  background-color: #f8f9fa;
 }
 

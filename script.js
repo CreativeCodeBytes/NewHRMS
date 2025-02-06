@@ -1,10 +1,23 @@
 const el = document.getElementById("wrapper")
 const toggleButton = document.getElementById("menu-toggle")
+const sidebar = document.getElementById("sidebar-wrapper")
+const sidebarLinks = document.querySelectorAll("#sidebar-wrapper .list-group-item")
 
 toggleButton.onclick = () => {
   el.classList.toggle("toggled")
 }
 
+// Function to close sidebar on mobile
+function closeSidebarOnMobile() {
+  if (window.innerWidth < 768) {
+    el.classList.remove("toggled")
+  }
+}
+
+// Add click event listeners to all sidebar links
+sidebarLinks.forEach(link => {
+  link.addEventListener("click", closeSidebarOnMobile)
+})
 // Attendance Chart
 document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.getElementById("attendanceChart").getContext("2d")

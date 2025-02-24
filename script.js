@@ -1,27 +1,15 @@
+// Toggle Sidebar
 const el = document.getElementById("wrapper")
 const toggleButton = document.getElementById("menu-toggle")
-const sidebar = document.getElementById("sidebar-wrapper")
-const sidebarLinks = document.querySelectorAll("#sidebar-wrapper .list-group-item")
 
 toggleButton.onclick = () => {
   el.classList.toggle("toggled")
 }
 
-// Function to close sidebar on mobile
-function closeSidebarOnMobile() {
-  if (window.innerWidth < 768) {
-    el.classList.remove("toggled")
-  }
-}
-
-// Add click event listeners to all sidebar links
-sidebarLinks.forEach(link => {
-  link.addEventListener("click", closeSidebarOnMobile)
-})
 // Attendance Chart
 document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.getElementById("attendanceChart").getContext("2d")
-  new Chart(ctx, {
+  var ctx = document.getElementById("attendanceChart").getContext("2d")
+  var myChart = new Chart(ctx, {
     type: "doughnut",
     data: {
       labels: ["On Time", "Late", "WFH", "Absent", "Sick Leave"],
@@ -54,41 +42,19 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 })
 
-// Form navigation functions
-function showProfileForm() {
-  document.getElementById("profileSection").style.display = "block"
-  document.getElementById("dashboardContent").style.display = "none"
-  document.getElementById("profileSection").classList.add("fade-in")
-}
-
-function showDashboard() {
-  document.getElementById("profileSection").style.display = "none"
-  document.getElementById("dashboardContent").style.display = "block"
-  document.getElementById("dashboardContent").classList.add("fade-in")
-}
-
-// Add event listener to show dashboard on page load
-document.addEventListener("DOMContentLoaded", showDashboard)
-
-// Profile photo update function
+// Profile Photo Update
 function updateProfilePhoto(event) {
   const file = event.target.files[0]
   if (file) {
     const reader = new FileReader()
     reader.onload = (e) => {
-      const profileImage = document.getElementById("profileImage")
-      profileImage.src = e.target.result
-      profileImage.classList.add("fade-in")
+      document.getElementById("profileImage").src = e.target.result
     }
     reader.readAsDataURL(file)
   }
 }
 
-// Initialize Bootstrap tooltips
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl))
-
-// Punch In/Out functionality
+// Punch In/Out Functionality
 let isPunchedIn = false
 let punchInTime = null
 let timerInterval = null
@@ -165,7 +131,6 @@ captureButton.addEventListener("click", () => {
   // Display the captured image
   selfieImage.src = imageDataUrl
   selfieImage.style.display = "block"
-  selfieImage.classList.add("fade-in")
   video.style.display = "none"
   captureButton.style.display = "none"
 
@@ -174,9 +139,6 @@ captureButton.addEventListener("click", () => {
 
   // Save attendance data
   saveAttendance(isPunchedIn ? "punch_in" : "punch_out", new Date(), imageDataUrl)
-
-  // Show notification
-  showNotification("Attendance recorded successfully!", "success")
 })
 
 function startCamera() {
@@ -202,331 +164,608 @@ function stopCamera() {
   video.srcObject = null
 }
 
-// Function to display attendance data
 function displayAttendance() {
   const attendance = JSON.parse(localStorage.getItem("attendance") || "[]")
   const attendanceTableBody = document.getElementById("attendanceTableBody")
   attendanceTableBody.innerHTML = ""
 
-  const groupedAttendance = groupAttendanceByDate(attendance)
+  attendance.forEach((record, index) => {
+    if (index % 2 === 0) {
+      const row = attendanceTableBody.insertRow()
+      const dateCell = row.insertCell(0)
+      const punchInTimeCell = row.insertCell(1)
+      const punchInSelfieCell = row.insertCell(2)
+      const punchOutTimeCell = row.insertCell(3)
+      const punchOutSelfieCell = row.insertCell(4)
+      const totalTimeCell = row.insertCell(5)
 
-  for (const [date, records] of Object.entries(groupedAttendance)) {
-    let punchInTime = ""
-    let punchInSelfie = ""
-    let punchOutTime = ""
-    let punchOutSelfie = ""
-    let totalTime = ""
+      dateCell.textContent = new Date(record.time).toLocaleDateString()
+      punchInTimeCell.textContent = new Date(record.time).toLocaleTimeString()
+      punchInSelfieCell.innerHTML = `<img src="${record.imageDataUrl}" alt="Punch In Selfie" width="50" height="50">`
 
-    records.forEach((record) => {
-      const time = new Date(record.time).toLocaleTimeString()
-      const selfie = `<img src="${record.imageDataUrl}" alt="Selfie" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">`
+      if (attendance[index + 1]) {
+        const punchOutRecord = attendance[index + 1]
+        punchOutTimeCell.textContent = new Date(punchOutRecord.time).toLocaleTimeString()
+        punchOutSelfieCell.innerHTML = `<img src="${punchOutRecord.imageDataUrl}" alt="Punch Out Selfie" width="50" height="50">`
 
-      if (record.type === "punch_in") {
-        punchInTime = time
-        punchInSelfie = selfie
-      } else {
-        punchOutTime = time
-        punchOutSelfie = selfie
+        const punchInTime = new Date(record.time)
+        const punchOutTime = new Date(punchOutRecord.time)
+        const timeDiff = punchOutTime - punchInTime
+        const hours = Math.floor(timeDiff / 3600000)
+        const minutes = Math.floor((timeDiff % 3600000) / 60000)
+        totalTimeCell.textContent = `${hours}h ${minutes}m`
       }
-    })
+    }
+  })
+}
 
-    if (punchInTime && punchOutTime) {
-      const punchIn = new Date(`${date} ${punchInTime}`)
-      const punchOut = new Date(`${date} ${punchOutTime}`)
-      const diff = punchOut - punchIn
-      const hours = Math.floor(diff / 3600000)
-      const minutes = Math.floor((diff % 3600000) / 60000)
-      totalTime = `${hours}h ${minutes}m`
+// Calendar Functionality
+const holidays = {
+  "01-01": { name: "New Year's Day", type: "Mandatory" },
+  "01-14": { name: "Makar Sankranti", type: "Optional" },
+  "01-26": { name: "Republic Day", type: "Mandatory" },
+  "02-19": { name: "Shivaji Jayanti", type: "Optional" },
+  "03-14": { name: "Holi", type: "Mandatory" },
+  "03-31": { name: "Ramzan Id", type: "Mandatory" },
+  "04-14": { name: "Ambedkar Jayanti", type: "Mandatory" },
+  "04-18": { name: "Good Friday", type: "Mandatory" },
+  "05-12": { name: "Buddha Purnima", type: "Optional" },
+  "06-06": { name: "Id-ul-Zuha (Bakrid)", type: "Optional" },
+  "08-15": { name: "Independence Day", type: "Mandatory" },
+  "08-27": { name: "Ganesh Chaturthi", type: "Mandatory" },
+  "10-02": { name: "Dussehra / Mahatma Gandhi Jayanti", type: "Mandatory" },
+  "10-21": { name: "Diwali (Deepavali)", type: "Mandatory" },
+  "11-11": { name: "Guru Nanak Jayanti", type: "Mandatory" },
+  "12-25": { name: "Christmas Day", type: "Mandatory" },
+}
+
+const currentDate = new Date()
+
+function renderCalendar() {
+  const monthYear = document.getElementById("monthYear")
+  const calendar = document.getElementById("calendar")
+  calendar.innerHTML = ""
+
+  const firstDayIndex = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
+  const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
+
+  monthYear.innerText = currentDate.toLocaleDateString("en-us", { month: "long", year: "numeric" })
+
+  const today = new Date()
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+  daysOfWeek.forEach((day) => {
+    const dayNameDiv = document.createElement("div")
+    dayNameDiv.classList.add("day-name")
+    dayNameDiv.innerText = day
+    calendar.appendChild(dayNameDiv)
+  })
+
+  for (let i = 0; i < firstDayIndex; i++) {
+    calendar.appendChild(document.createElement("div"))
+  }
+
+  for (let i = 1; i <= lastDay; i++) {
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i)
+    const fullDate = `${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`
+    const dayDiv = document.createElement("div")
+    dayDiv.classList.add("day")
+
+    if (date.toDateString() === today.toDateString()) {
+      dayDiv.classList.add("today")
+    }
+    if (date.getDay() === 0 || date.getDay() === 6) {
+      dayDiv.classList.add("weekend")
     }
 
-    const row = document.createElement("tr")
-    row.innerHTML = `
-            <td>${date}</td>
-            <td>${punchInTime}</td>
-            <td>${punchInSelfie}</td>
-            <td>${punchOutTime}</td>
-            <td>${punchOutSelfie}</td>
-            <td>${totalTime}</td>
+    const dayNumber = document.createElement("div")
+    dayNumber.classList.add("day-number")
+    dayNumber.innerText = i
+    dayDiv.appendChild(dayNumber)
+
+    if (holidays[fullDate]) {
+      dayDiv.classList.add(holidays[fullDate].type.toLowerCase())
+      const holidayName = document.createElement("div")
+      holidayName.classList.add("holiday-name")
+      holidayName.innerText = holidays[fullDate].name
+      dayDiv.appendChild(holidayName)
+    }
+
+    calendar.appendChild(dayDiv)
+  }
+}
+
+document.getElementById("prevMonth").addEventListener("click", () => {
+  currentDate.setMonth(currentDate.getMonth() - 1)
+  renderCalendar()
+})
+
+document.getElementById("nextMonth").addEventListener("click", () => {
+  currentDate.setMonth(currentDate.getMonth() + 1)
+  renderCalendar()
+})
+
+// Navigation Functions
+function showProfileForm() {
+  document.getElementById("profileSection").style.display = "block"
+  document.getElementById("dashboardContent").style.display = "none"
+  document.getElementById("attendanceRecords").style.display = "none"
+  document.getElementById("reportsSection").style.display = "none"
+  document.getElementById("holidayCalendarSection").style.display = "none"
+  document.getElementById("leaveSection").style.display = "none"
+  document.getElementById("resignationRecords").style.display = "none"
+  document.getElementById("payrollSection").style.display = "none"
+}
+
+function showDashboard() {
+  document.getElementById("profileSection").style.display = "none"
+  document.getElementById("dashboardContent").style.display = "block"
+  document.getElementById("attendanceRecords").style.display = "none"
+  document.getElementById("reportsSection").style.display = "none"
+  document.getElementById("holidayCalendarSection").style.display = "none"
+  document.getElementById("leaveSection").style.display = "none"
+  document.getElementById("resignationRecords").style.display = "none"
+  document.getElementById("payrollSection").style.display = "none"
+}
+
+function showAttendanceRecords() {
+  document.getElementById("profileSection").style.display = "none"
+  document.getElementById("dashboardContent").style.display = "none"
+  document.getElementById("attendanceRecords").style.display = "block"
+  document.getElementById("reportsSection").style.display = "none"
+  document.getElementById("holidayCalendarSection").style.display = "none"
+  document.getElementById("leaveSection").style.display = "none"
+  document.getElementById("resignationRecords").style.display = "none"
+  document.getElementById("payrollSection").style.display = "none"
+  displayAttendance()
+}
+
+function showReports() {
+  document.getElementById("profileSection").style.display = "none"
+  document.getElementById("dashboardContent").style.display = "none"
+  document.getElementById("attendanceRecords").style.display = "none"
+  document.getElementById("reportsSection").style.display = "block"
+  document.getElementById("holidayCalendarSection").style.display = "none"
+  document.getElementById("leaveSection").style.display = "none"
+  document.getElementById("resignationRecords").style.display = "none"
+  document.getElementById("payrollSection").style.display = "none"
+}
+
+function showResignation() {
+  document.getElementById("profileSection").style.display = "none"
+  document.getElementById("dashboardContent").style.display = "none"
+  document.getElementById("attendanceRecords").style.display = "none"
+  document.getElementById("reportsSection").style.display = "none"
+  document.getElementById("holidayCalendarSection").style.display = "none"
+  document.getElementById("leaveSection").style.display = "none"
+  document.getElementById("resignationRecords").style.display = "block"
+  document.getElementById("payrollSection").style.display = "none"
+}
+
+function showPayroll() {
+  document.getElementById("profileSection").style.display = "none"
+  document.getElementById("dashboardContent").style.display = "none"
+  document.getElementById("attendanceRecords").style.display = "none"
+  document.getElementById("reportsSection").style.display = "none"
+  document.getElementById("holidayCalendarSection").style.display = "none"
+  document.getElementById("leaveSection").style.display = "none"
+  document.getElementById("resignationRecords").style.display = "none"
+  document.getElementById("payrollSection").style.display = "block"
+}
+
+function showHolidayCalendar() {
+  document.getElementById("profileSection").style.display = "none"
+  document.getElementById("dashboardContent").style.display = "none"
+  document.getElementById("attendanceRecords").style.display = "none"
+  document.getElementById("reportsSection").style.display = "none"
+  document.getElementById("holidayCalendarSection").style.display = "block"
+  document.getElementById("leaveSection").style.display = "none"
+  document.getElementById("resignationRecords").style.display = "none"
+  document.getElementById("payrollSection").style.display = "none"
+  renderCalendar()
+}
+
+// Event Listeners
+document.addEventListener("DOMContentLoaded", () => {
+  showDashboard()
+
+  document.getElementById("dashboardLink").addEventListener("click", (e) => {
+    e.preventDefault()
+    showDashboard()
+  })
+
+  document.getElementById("attendanceLink").addEventListener("click", (e) => {
+    e.preventDefault()
+    showAttendanceRecords()
+  })
+
+  document.getElementById("reportsLink").addEventListener("click", (e) => {
+    e.preventDefault()
+    showReports()
+  })
+
+  document.getElementById("resignationLink").addEventListener("click", (e) => {
+    e.preventDefault()
+    showResignation()
+  })
+
+  document.getElementById("payrollLink").addEventListener("click", (e) => {
+    e.preventDefault()
+    showPayroll()
+  })
+
+  document.getElementById("holidayCalendarLink").addEventListener("click", (e) => {
+    e.preventDefault()
+    showHolidayCalendar()
+  })
+})
+
+// Reports Functionality
+function generateReport() {
+  const reportType = document.getElementById("reportType").value
+  const dateRange = document.getElementById("dateRange").value
+  let reportTitle = ""
+  let reportData = ""
+
+  if (!dateRange) {
+    alert("Please select a date range")
+    return
+  }
+
+  switch (reportType) {
+    case "attendance":
+      reportTitle = "Personal Attendance & Work Hours Report"
+      reportData = "You worked 162 hours in " + dateRange + ". You took 2 leaves."
+      break
+    case "leave":
+      reportTitle = "Leave & Time-Off Report"
+      reportData = "Leave balance: 5 Casual, 3 Sick. 1 Leave request pending."
+      break
+    case "payroll":
+      reportTitle = "Payroll & Salary Report"
+      reportData = "Your salary slip for " + dateRange + " is available for download."
+      break
+    case "task":
+      reportTitle = "Task & Work Performance Report"
+      reportData = "You completed 90% of your assigned tasks on time."
+      break
+    case "performance":
+      reportTitle = "Performance Evaluation Report"
+      reportData = "Your last appraisal rating: 4.5/5 ⭐"
+      break
+    case "wfh":
+      reportTitle = "Work-from-Home Report"
+      reportData = "You worked remotely for 12 days with an 85% productivity score."
+      break
+    case "benefits":
+      reportTitle = "Employee Benefits Report"
+      reportData = "Your medical insurance covers up to $5000 with 3 claims filed."
+      break
+    case "feedback":
+      reportTitle = "Feedback & Engagement Report"
+      reportData = "Your workplace satisfaction rating is 4.2/5. 2 suggestions submitted."
+      break
+  }
+
+  document.getElementById("reportTitle").innerText = reportTitle
+  document.getElementById("reportData").innerText = reportData
+  document.getElementById("reportContent").style.display = "block"
+}
+
+function downloadReport() {
+  alert("Downloading report as PDF...")
+  // Implement actual PDF download functionality here
+}
+
+// Leave Management Functionality
+const leaveSection = document.getElementById("leaveSection")
+const leaveForm = document.getElementById("leaveForm")
+const leaveHistoryList = document.getElementById("leaveHistoryList")
+const fromDateInput = document.getElementById("fromDate")
+const toDateInput = document.getElementById("toDate")
+const leaveTypeSelect = document.getElementById("leaveType")
+const reasonInput = document.getElementById("reason")
+const totalDaysSpan = document.getElementById("totalDays")
+
+const leaveHistory = [
+  { date: "Feb 15", type: "Medical", leaveType: "Full Day", status: "Pending", days: 1.0 },
+  { date: "Feb 10", type: "Personal", leaveType: "Half Day", status: "Approved", days: 0.5 },
+  { date: "Jan 25", type: "Vacation", leaveType: "Full Day", status: "Rejected", days: 2.0 },
+]
+
+function showLeaveSection() {
+  document.getElementById("profileSection").style.display = "none"
+  document.getElementById("dashboardContent").style.display = "none"
+  document.getElementById("attendanceRecords").style.display = "none"
+  document.getElementById("reportsSection").style.display = "none"
+  document.getElementById("holidayCalendarSection").style.display = "none"
+  leaveSection.style.display = "block"
+}
+
+function renderLeaveHistory() {
+  leaveHistoryList.innerHTML = ""
+  leaveHistory.forEach((leave) => {
+    const leaveItem = document.createElement("div")
+    leaveItem.className = "list-group-item d-flex justify-content-between align-items-center"
+    leaveItem.innerHTML = `
+            <div>
+                <div class="fw-bold">${leave.date} - ${leave.type}</div>
+                <div class="text-muted">${leave.leaveType}</div>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="me-3">${leave.days} days</span>
+                <span class="badge bg-${leave.status === "Approved" ? "success" : leave.status === "Rejected" ? "danger" : "warning"} rounded-pill">${leave.status}</span>
+            </div>
         `
-    attendanceTableBody.appendChild(row)
-  }
-}
-
-// Call displayAttendance when the page loads
-document.addEventListener("DOMContentLoaded", displayAttendance)
-
-// Add smooth scrolling to all links
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault()
-
-    document.querySelector(this.getAttribute("href")).scrollIntoView({
-      behavior: "smooth",
-    })
+    leaveHistoryList.appendChild(leaveItem)
   })
-})
-
-// Add animation to cards on hover
-document.querySelectorAll(".card").forEach((card) => {
-  card.addEventListener("mouseenter", () => {
-    card.style.transform = "translateY(-5px)"
-    card.style.boxShadow = "0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2)"
-  })
-
-  card.addEventListener("mouseleave", () => {
-    card.style.transform = "translateY(0)"
-    card.style.boxShadow = "0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15)"
-  })
-})
-
-// Implement a simple dark mode toggle
-const darkModeToggle = document.createElement("button")
-darkModeToggle.textContent = "Toggle Dark Mode"
-darkModeToggle.classList.add("btn", "btn-secondary", "position-fixed", "bottom-0", "end-0", "m-3")
-document.body.appendChild(darkModeToggle)
-
-darkModeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode")
-})
-
-// Add dark mode styles
-const style = document.createElement("style")
-style.textContent = `
-  body.dark-mode {
-    background-color: #1a1a1a;
-    color: #f0f0f0;
-  }
-
-  body.dark-mode .card {
-    background-color: #2a2a2a;
-    color: #f0f0f0;
-  }
-
-  body.dark-mode .bg-white {
-    background-color: #2a2a2a !important;
-  }
-
-  body.dark-mode .text-dark {
-    color: #f0f0f0 !important;
-  }
-
-  body.dark-mode .navbar {
-    background-color: #2a2a2a !important;
-  }
-
-  body.dark-mode .list-group-item {
-    background-color: #2a2a2a;
-    color: #f0f0f0;
-  }
-
-  body.dark-mode .form-control {
-    background-color: #3a3a3a;
-    color: #f0f0f0;
-    border-color: #4a4a4a;
-  }
-
-  body.dark-mode .btn-outline-light {
-    color: #f0f0f0;
-    border-color: #f0f0f0;
-  }
-
-  body.dark-mode .btn-outline-light:hover {
-    background-color: #f0f0f0;
-    color: #2a2a2a;
-  }
-`
-document.head.appendChild(style)
-
-// Implement a simple loading animation
-const loadingOverlay = document.createElement("div")
-loadingOverlay.id = "loadingOverlay"
-loadingOverlay.innerHTML =
-  '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>'
-document.body.appendChild(loadingOverlay)
-
-// Add loading overlay styles
-const loadingStyle = document.createElement("style")
-loadingStyle.textContent = `
-  #loadingOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    display: none;
-  }
-`
-document.head.appendChild(loadingStyle)
-
-// Function to show loading overlay
-function showLoading() {
-  loadingOverlay.style.display = "flex"
 }
 
-// Function to hide loading overlay
-function hideLoading() {
-  loadingOverlay.style.display = "none"
+function calculateTotalDays(fromDate, toDate, leaveType) {
+  if (!fromDate || !toDate) return 1.0
+
+  const start = new Date(fromDate)
+  const end = new Date(toDate)
+  const diffTime = Math.abs(end - start)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
+
+  return leaveType === "HalfDay" ? diffDays * 0.5 : diffDays
 }
 
-// Example usage of loading overlay
-punchButton.addEventListener("click", () => {
-  showLoading()
-  setTimeout(() => {
-    // Simulating some asynchronous operation
-    hideLoading()
-  }, 2000)
-})
-
-// Implement a simple notification system
-function showNotification(message, type = "info") {
-  const notification = document.createElement("div")
-  notification.classList.add("notification", `notification-${type}`)
-  notification.textContent = message
-  document.body.appendChild(notification)
-
-  setTimeout(() => {
-    notification.classList.add("show")
-  }, 100)
-
-  setTimeout(() => {
-    notification.classList.remove("show")
-    setTimeout(() => {
-      notification.remove()
-    }, 300)
-  }, 3000)
+function updateTotalDays() {
+  const totalDays = calculateTotalDays(fromDateInput.value, toDateInput.value, leaveTypeSelect.value)
+  totalDaysSpan.textContent = totalDays.toFixed(1)
 }
 
-// Add notification styles
-const notificationStyle = document.createElement("style")
-notificationStyle.textContent = `
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .notification.show {
-    opacity: 1;
-  }
-
-  .notification-info {
-    background-color: #17a2b8;
-  }
-
-  .notification-success {
-    background-color: #28a745;
-  }
-
-  .notification-warning {
-    background-color: #ffc107;
-    color: #212529;
-  }
-
-  .notification-error {
-    background-color: #dc3545;
-  }
-`
-document.head.appendChild(notificationStyle)
-
-// Example usage of notification system
-captureButton.addEventListener("click", () => {
-  showNotification("Selfie captured successfully!", "success")
-})
-
-// Implement a simple modal system
-function createModal(title, content) {
-  const modal = document.createElement("div")
-  modal.classList.add("modal", "fade")
-  modal.innerHTML = `
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">${title}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          ${content}
-        </div>
-      </div>
-    </div>
-  `
-  document.body.appendChild(modal)
-  return new bootstrap.Modal(modal)
+function setMinDates() {
+  const today = new Date().toISOString().split("T")[0]
+  fromDateInput.min = today
+  toDateInput.min = today
 }
 
-// Example usage of modal system
-const helpButton = document.createElement("button")
-helpButton.textContent = "Help"
-helpButton.classList.add("btn", "btn-info", "position-fixed", "bottom-0", "start-0", "m-3")
-document.body.appendChild(helpButton)
-
-helpButton.addEventListener("click", () => {
-  const helpModal = createModal("Help", "<p>This is a help message. You can add more detailed instructions here.</p>")
-  helpModal.show()
+fromDateInput.addEventListener("change", () => {
+  toDateInput.min = fromDateInput.value
+  updateTotalDays()
 })
 
-// Add responsive improvements
-window.addEventListener("resize", () => {
-  if (window.innerWidth < 768) {
-    document.getElementById("sidebar-wrapper").classList.add("toggled")
-  } else {
-    document.getElementById("sidebar-wrapper").classList.remove("toggled")
+toDateInput.addEventListener("change", updateTotalDays)
+leaveTypeSelect.addEventListener("change", updateTotalDays)
+
+leaveForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+
+  const fromDate = new Date(fromDateInput.value)
+  const newLeave = {
+    date: fromDate.toLocaleDateString("en-US", { month: "short", day: "2-digit" }),
+    type: reasonInput.value || "Personal",
+    leaveType: leaveTypeSelect.value === "HalfDay" ? "Half Day" : "Full Day",
+    status: "Pending",
+    days: Number.parseFloat(totalDaysSpan.textContent),
   }
+
+  leaveHistory.unshift(newLeave)
+  renderLeaveHistory()
+
+  leaveForm.reset()
+  totalDaysSpan.textContent = "1.0"
+
+  alert("Leave request submitted successfully!")
 })
 
-// Implement lazy loading for images
 document.addEventListener("DOMContentLoaded", () => {
-  var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"))
+  setMinDates()
+  renderLeaveHistory()
 
-  if ("IntersectionObserver" in window) {
-    const lazyImageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const lazyImage = entry.target
-          lazyImage.src = lazyImage.dataset.src
-          lazyImage.classList.remove("lazy")
-          lazyImageObserver.unobserve(lazyImage)
-        }
-      })
-    })
-
-    lazyImages.forEach((lazyImage) => {
-      lazyImageObserver.observe(lazyImage)
-    })
-  }
+  document.getElementById("leaveLink").addEventListener("click", (e) => {
+    e.preventDefault()
+    showLeaveSection()
+  })
 })
 
-// Attendance records functionality
-document.addEventListener("DOMContentLoaded", () => {
-  const attendanceLink = document.getElementById("attendanceLink")
-  const attendanceRecords = document.getElementById("attendanceRecords")
-  const dashboardContent = document.getElementById("dashboardContent").children
+// Update current month
+const currentMonthElement = document.querySelector(".current-month")
+const currentMonth = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })
+currentMonthElement.textContent = currentMonth
 
-  attendanceLink.addEventListener("click", (e) => {
+
+
+// payroll functinality
+document.addEventListener('DOMContentLoaded', function() {
+  // Tab Switching Logic
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabContents = document.querySelectorAll('.tabpay-content');
+
+  tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+          // Remove active class from all buttons and contents
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+
+          // Add active class to clicked button and corresponding content
+          button.classList.add('active');
+          const tabId = button.getAttribute('data-tab');
+          document.getElementById(`${tabId}Tab`).classList.add('active');
+      });
+  });
+
+    // Populate Year Selector Dynamically
+    const yearSelect = document.getElementById('yearSelect');
+    for (let i = 2024; i <= 2040; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        yearSelect.appendChild(option);
+    }
+
+       // Populate Month Selector Dynamically
+  const monthSelect = document.getElementById('monthSelect');
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  months.forEach(month => {
+      const option = document.createElement('option');
+      option.value = month;
+      option.textContent = month;
+      monthSelect.appendChild(option);
+  });
+
+    // Set default selection to current month and year
+    const currentYear = new Date().getFullYear();
+    yearSelect.value = currentYear;
+    monthSelect.value = months[new Date().getMonth()];
+
+
+
+  // PDF Generation Logic
+  const downloadBtn = document.getElementById('downloadBtn');
+  downloadBtn.addEventListener('click', generatePDF);
+
+  function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Set initial coordinates
+      let y = 20;
+      
+      // Add company header
+      doc.setFontSize(16);
+      doc.text('Cybromatech Technology Pvt Ltd', 20, y);
+      
+      y += 10;
+      doc.setFontSize(10);
+      doc.text('Marisoft Tech Park, Marisoft 1,4 FLOOR, KALYANI NAGAR, Pune, Maharashtra - 411014', 20, y);
+      
+      y += 20;
+      // Add payslip header
+      doc.setFontSize(14);
+      const month = document.getElementById('monthSelect').value;
+      const year = document.getElementById('yearSelect').value;
+      doc.text(`Payslip for the Month of ${month}, ${year}`, 20, y);
+      
+      // Add employee details
+      y += 20;
+      doc.setFontSize(10);
+      const employeeDetails = [
+          ['Name:', 'Vikas Patil', 'Employee ID:', 'CTR/EMP1101'],
+          ['Designation:', 'Data Science', 'Bank Name:', 'YES BANK'],
+          ['Department:', 'Software Developer', 'Bank Account No:', '1636085692014'],
+          ['Location:', 'Pune', 'PAN No.:', 'HAOP658A'],
+          ['Effective Work Days:', '31', '', ''],
+          ['LOP:', '2.0', '', '']
+      ];
+
+      employeeDetails.forEach(row => {
+          doc.text(row[0], 20, y);
+          doc.text(row[1], 60, y);
+          if (row[2]) {
+              doc.text(row[2], 120, y);
+              doc.text(row[3], 160, y);
+          }
+          y += 10;
+      });
+
+      // Add earnings
+      y += 10;
+      doc.setFontSize(12);
+      doc.text('Earnings', 20, y);
+      
+      y += 10;
+      doc.setFontSize(10);
+      doc.text('Basic:', 20, y);
+      doc.text('20,000', 60, y);
+
+      y += 10;
+      doc.text('Total Earnings (Rs):', 20, y);
+      doc.text('20,000', 60, y);
+
+      // Add deductions
+      y += 20;
+      doc.setFontSize(12);
+      doc.text('Deductions', 20, y);
+      
+      y += 10;
+      doc.setFontSize(10);
+      const deductions = [
+          ['Term Insurance:', '1,000'],
+          ['Health Insurance:', '1,000'],
+          ['PF Employee:', '1,600'],
+          ['PT:', '200']
+      ];
+
+      deductions.forEach(row => {
+          doc.text(row[0], 20, y);
+          doc.text(row[1], 60, y);
+          y += 10;
+      });
+
+      doc.text('Total Deductions (Rs):', 20, y);
+      doc.text('3,800', 60, y);
+
+      // Add net pay
+      y += 20;
+      doc.setFontSize(12);
+      doc.text('Net Pay For The Month (Rs) : 16,200', 20, y);
+      // doc.text('16,200', 60, y);
+
+      y += 10;
+      doc.setFontSize(10);
+      doc.text('(Sixteen Thousand Two Hundred Rupees Only)', 20, y);
+
+      // Add disclaimer
+      y += 20;
+      doc.setFontSize(8);
+      doc.text('* This is a system generated payslip and does not require signature.', 20, y);
+
+      // Save the PDF
+      doc.save(`payslip-${month}-${year}.pdf`);
+  }
+
+  // Initialize the salary table data
+  const salaryData = [
+      ['GROSS', '20,000', '2,24,000'],
+      ['Basic', '20,000', '2,24,000'],
+      ['HRA', '0', '0'],
+      ['PF Employer', '1,600', '19,200'],
+      ['Overtime', '0', '0'],
+      ['Term Insurance', '1,000', '12,000'],
+      ['Health Insurance', '1,000', '12,000'],
+      ['ESI Employer', '0', '0'],
+      ['Special Allowance', '0', '0']
+  ];
+
+  // Populate salary table
+  const salaryTableBody = document.querySelector('.salary-table tbody');
+  salaryData.forEach(row => {
+      const tr = document.createElement('tr');
+      row.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+      });
+      salaryTableBody.appendChild(tr);
+  });
+});
+
+
+
+//Resignation  functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const resignationLink = document.getElementById("resignationLink")
+  const resignationRecords = document.getElementById("resignationRecords")
+  
+  resignationLink.addEventListener("click", (e) => {
     e.preventDefault()
-    attendanceRecords.style.display = "block"
+    resignationRecords.style.display = "block"
     for (let i = 0; i < dashboardContent.length; i++) {
-      if (dashboardContent[i] !== attendanceRecords) {
+      if (dashboardContent[i] !== resignationRecords) {
         dashboardContent[i].style.display = "none"
       }
     }
-    displayAttendance()
+    displayResignation()
   })
 })
 
-function groupAttendanceByDate(attendance) {
-  return attendance.reduce((acc, record) => {
-    const date = new Date(record.time).toLocaleDateString()
+function groupResignationByDate(resignations) {
+  return resignations.reduce((acc, record) => {
+    const date = new Date(record.date).toLocaleDateString()
     if (!acc[date]) {
       acc[date] = []
     }
@@ -534,4 +773,27 @@ function groupAttendanceByDate(attendance) {
     return acc
   }, {})
 }
+
+function displayResignation() {
+  const resignations = JSON.parse(localStorage.getItem("resignations") || "[]")
+  const resignationTableBody = document.getElementById("resignationTableBody")
+  resignationTableBody.innerHTML = ""
+
+  const groupedResignations = groupResignationByDate(resignations)
+
+  for (const [date, records] of Object.entries(groupedResignations)) {
+    records.forEach((record) => {
+      const row = document.createElement("tr")
+      row.innerHTML = `
+            <td>${date}</td>
+            
+            <td>${record.reason || "No reason provided"}</td>
+            <td>${record.status || "Pending"}</td>
+        `
+      resignationTableBody.appendChild(row)
+    })
+  }
+}
+
+document.addEventListener("DOMContentLoaded", displayResignation)
 

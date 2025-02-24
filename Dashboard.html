@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                <i class="fas fa-user-tie me-2"></i>HRMS
+            </div>
+            <div class="list-group list-group-flush my-3">
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text active" id="dashboardLink">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" id="attendanceLink">
+                    <i class="fa-regular fa-circle-check me-2"></i>Attendance
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" id="leaveLink">
+                    <i class="fas fa-clock me-2"></i>Leave Status
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" id="holidayCalendarLink">
+                    <i class="fas fa-calendar-alt me-2"></i>Holiday Calendar
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" id="reportsLink">
+                    <i class="fas fa-chart-line me-2"></i>Reports
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" id="payrollLink">
+                    <i class="fa-solid fa-indian-rupee-sign me-2"></i>Payroll
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" id="resignationLink">
+                    <i class="fas fa-sign-out-alt me-2"></i>Resignation
+                </a>
+                <a href="index.html" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold">
+                    <i class="fas fa-power-off me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                    <h2 class="fs-2 m-0">Menu</h2>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user me-2"></i>Vikas Patil
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#" onclick="showProfileForm()">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="index.html">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid px-4">
+                <!-- Profile Section -->
+                <div id="profileSection" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="card profile-card">
+                                <div class="card-body text-center">
+                                    <div class="position-relative d-inline-block mb-3">
+                                        <img id="profileImage" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-04%20102351-FA54c698dRbXg5E6hJ21LqPkTajQ43.png" alt="Profile" class="rounded-circle img-fluid" width="150" height="150">
+                                        <label for="profilePhotoInput" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2 cursor-pointer">
+                                            <i class="fas fa-camera"></i>
+                                        </label>
+                                        <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*" onchange="updateProfilePhoto(event)">
+                                    </div>
+                                    <h3 class="mb-1">Vikas Patil</h3>
+                                    <p class="text-muted mb-3">Sr. Software Developer</p>
+                                    <div class="d-flex justify-content-center mb-3">
+                                        <a href="#" class="btn btn-outline-light me-2"><i class="fab fa-facebook-f"></i></a>
+                                        <a href="#" class="btn btn-outline-light me-2"><i class="fab fa-twitter"></i></a>
+                                        <a href="#" class="btn btn-outline-light"><i class="fab fa-linkedin-in"></i></a>
+                                    </div>
+                                    <div class="text-start">
+                                        <p><i class="fas fa-phone-alt me-2"></i>+91 1234567890</p>
+                                        <p><i class="fas fa-envelope me-2"></i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fead8a9b8e9b8c9a9bcfcccabe9b869f938e929bd09d9193">[email&#160;protected]</a></p>
+                                        <p><i class="fas fa-calendar-alt me-2"></i>Joined on 15 Jan 2024</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab" aria-controls="personal" aria-selected="true">Personal Info</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab" aria-controls="bank" aria-selected="false">Bank Details</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">Documents</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content mt-3" id="profileTabsContent">
+                                        <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                                            <form>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">First Name</label>
+                                                        <input type="text" class="form-control" value="Vikas">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Last Name</label>
+                                                        <input type="text" class="form-control" value="Patil">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Email</label>
+                                                        <input type="email" class="form-control" value="vikas.patil@example.com">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Phone No.</label>
+                                                        <input type="tel" class="form-control" value="+91 1234567890">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Address</label>
+                                                    <input type="text" class="form-control" value="123 Main St, Mumbai, Maharashtra">
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">City</label>
+                                                        <input type="text" class="form-control" value="Mumbai">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">State</label>
+                                                        <input type="text" class="form-control" value="Maharashtra">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Postal Code</label>
+                                                        <input type="text" class="form-control" value="400001">
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </form>
+                                        </div>
+                                        <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
+                                            <form>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Bank Name</label>
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Account Number</label>
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">IFSC Code</label>
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Save Bank Details</button>
+                                            </form>
+                                        </div>
+                                        <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                                            <form>
+                                                <div class="mb-3">
+                                                    <label class="form-label">ID Proof</label>
+                                                    <input type="file" class="form-control">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Address Proof</label>
+                                                    <input type="file" class="form-control">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">SSC Marksheet</label>
+                                                    <input type="file" class="form-control" multiple>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">HSC/Diploma Marksheet</label>
+                                                    <input type="file" class="form-control" multiple>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">UG (BE,BTECH) Marksheet</label>
+                                                    <input type="file" class="form-control" multiple>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">PG Marksheet</label>
+                                                    <input type="file" class="form-control" multiple>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Your Resume</label>
+                                                    <input type="file" class="form-control" multiple>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Upload Documents</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div id="dashboardContent">
+                    <!-- Notification Banner -->
+                    <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>Your Leave Request for "24th January 2025" has been Approved!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card bg-primary text-white h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Hours Today</h5>
+                                    <p class="card-text display-4">8.36</p>
+                                    <p class="card-text"><small>Target: 9 hours</small></p>
+                                </div>
+                                <div class="card-footer d-flex">
+                                    View Details
+                                    <span class="ms-auto">
+                                        <i class="fas fa-arrow-up"></i>
+                                        5%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Hours Week</h5>
+                                    <p class="card-text display-4">10</p>
+                                    <p class="card-text"><small>Target: 40 hours</small></p>
+                                </div>
+                                <div class="card-footer d-flex">
+                                    View Details
+                                    <span class="ms-auto">
+                                        <i class="fas fa-arrow-up"></i>
+                                        7%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-dark h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Hours Month</h5>
+                                    <p class="card-text display-4">75</p>
+                                    <p class="card-text"><small>Target: 98 hours</small></p>
+                                </div>
+                                <div class="card-footer d-flex">
+                                    View Details
+                                    <span class="ms-auto">
+                                        <i class="fas fa-arrow-down"></i>
+                                        8%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-info text-white h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Overtime this Month</h5>
+                                    <p class="card-text display-4">16</p>
+                                    <p class="card-text"><small>Limit: 28 hours</small></p>
+                                </div>
+                                <div class="card-footer d-flex">
+                                    View Details
+                                    <span class="ms-auto">
+                                        <i class="fas fa-arrow-down"></i>
+                                        6%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Punch In/Out Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Attendance</h5>
+                                    <p id="punchStatus" class="card-text">You haven't punched in yet.</p>
+                                    <button id="punchButton" class="btn btn-primary">Punch In</button>
+                                    <p id="punchDateTime" class="card-text mt-2"></p>
+                                    <p id="punchTime" class="card-text mt-2"></p>
+                                    <div id="selfieContainer" class="mt-3" style="display: none;">
+                                        <video id="video" width="320" height="240" style="display: none;"></video>
+                                        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+                                        <img id="selfieImage" src="/placeholder.svg" alt="Selfie" style="display: none; max-width: 320px; max-height: 240px;">
+                                        <br>
+                                        <button id="captureButton" class="btn btn-secondary mt-2">Capture Selfie</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Dashboard Sections -->
+                    <div class="row">
+                        <!-- Left Column -->
+                        <div class="col-md-8">
+                            <!-- Announcements -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Announcements</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0">New Project Kickoff</h6>
+                                                <small class="text-muted">Join us for the kickoff meeting of Project X</small>
+                                            </div>
+                                            <span class="badge bg-primary rounded-pill">Today</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0">Team Building Event</h6>
+                                                <small class="text-muted">Get ready for fun activities and team bonding</small>
+                                            </div>
+                                            <span class="badge bg-primary rounded-pill">Tomorrow</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0">Quarterly Review Meeting</h6>
+                                                <small class="text-muted">Prepare your reports for the quarterly review</small>
+                                            </div>
+                                            <span class="badge bg-primary rounded-pill">Next Week</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Leave Details -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Leave Details</h5>
+                                    <span class="text-muted">2025</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <canvas id="attendanceChart"></canvas>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="stats-list">
+                                                <div class="stat-item">
+                                                    <span class="dot bg-primary"></span>
+                                                    <span>1254 on time</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="dot bg-warning"></span>
+                                                    <span>32 Late Attendance</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="dot bg-success"></span>
+                                                    <span>658 Work From Home</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="dot bg-danger"></span>
+                                                    <span>14 Absent</span>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <span class="dot bg-info"></span>
+                                                    <span>68 Sick Leave</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="col-md-4">
+                            <!-- Today's Quote -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-quote-left me-2"></i>Today's Quote</h5>
+                                </div>
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p>"The only way to do great work is to love what you do."</p>
+                                        <footer class="blockquote-footer">Steve Jobs</footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+
+                            <!-- Notifications -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-bell me-2"></i>Notifications</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Leave Request Approved</strong>
+                                                <p class="mb-0 text-muted">Your leave request for May 15th has been approved.</p>
+                                            </div>
+                                            <span class="badge bg-success">New</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Payslip Generated</strong>
+                                                <p class="mb-0 text-muted">Your April payslip is now available for download.</p>
+                                            </div>
+                                            <span class="badge bg-info">1d ago</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Team Meeting Reminder</strong>
+                                                <p class="mb-0 text-muted">Don't forget about the team meeting at 3 PM today.</p>
+                                            </div>
+                                            <span class="badge bg-warning">2h ago</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Today's Birthdays -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-birthday-cake me-2"></i>Today's Birthdays</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <img src="/placeholder.svg?height=40&width=40" alt="John Doe" class="rounded-circle me-3" width="40" height="40">
+                                            <div>
+                                                <h6 class="mb-0">John Doe</h6>
+                                                <small class="text-muted">UI/UX Designer</small>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item d-flex align-items-center">
+                                            <img src="/placeholder.svg?height=40&width=40" alt="Jane Smith" class="rounded-circle me-3" width="40" height="40">
+                                            <div>
+                                                <h6 class="mb-0">Jane Smith</h6>
+                                                <small class="text-muted">Project Manager</small>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Records -->
+                <div id="attendanceRecords" style="display: none;">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Attendance Records</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Punch In Time</th>
+                                            <th>Punch In Selfie</th>
+                                            <th>Punch Out Time</th>
+                                            <th>Punch Out Selfie</th>
+                                            <th>Total Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="attendanceTableBody">
+                                        <!-- Attendance records will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Section -->
+                <div id="reportsSection" class="report-section" style="display: none;">
+                    <h2 class="text-center mb-4">Our Reports</h2>
+                    
+                    <form id="reportForm" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="reportType" class="form-label">Select Report Type</label>
+                                <select id="reportType" class="form-select">
+                                    <option value="attendance">Attendance & Work Hours</option>
+                                    <option value="leave">Leave & Time-Off</option>
+                                    <option value="payroll">Payroll & Salary</option>
+                                    <option value="task">Task & Work Performance</option>
+                                    <option value="performance">Performance Evaluation</option>
+                                    <option value="wfh">Work-from-Home</option>
+                                    <option value="benefits">Employee Benefits</option>
+                                    <option value="feedback">Feedback & Engagement</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dateRange" class="form-label">Select Date Range</label>
+                                <input type="month" id="dateRange" class="form-control">
+                            </div>
+                            <div class="col-md-4 align-self-end">
+                                <button type="button" class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="reportContent" class="report-section card p-3" style="display: none;">
+                        <h4 id="reportTitle"></h4>
+                        <p id="reportData"></p>
+                        <button class="btn btn-success" onclick="downloadReport()">Download PDF</button>
+                    </div>
+                </div>
+
+                <!-- Holiday Calendar Section -->
+                <div id="holidayCalendarSection" style="display: none;">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="calendar-content">
+                                <div class="calendar-card">
+                                    <div class="calendar-header">
+                                        <button class="nav-button" id="prevMonth">&lt;</button>
+                                        <div class="month-year" id="monthYear"></div>
+                                        <button class="nav-button" id="nextMonth">&gt;</button>
+                                    </div>
+                                    <div class="calendar-body">
+                                        <div class="calendar-grid" id="calendar"></div>
+                                        <div class="legend">
+                                            <div class="legend-item">
+                                                <div class="legend-color legend-mandatory"></div>
+                                                <span>Mandatory Holiday</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-color legend-optional"></div>
+                                                <span>Optional Holiday</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-color legend-weekend"></div>
+                                                <span>Weekend</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-color legend-today"></div>
+                                                <span>Today's Date</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Leave Section -->
+                <div id="leaveSection" style="display: none;">
+                    <header>
+                        <div class="logo">📅</div>
+                        <h1>Leave Management</h1>
+                    </header>
+                    <div class="stats-grid mb-4">
+                        <div class="stat-card total">
+                            <h3>Total Leaves</h3>
+                            <div class="value">24</div>
+                        </div>
+                        <div class="stat-card pending">
+                            <h3>Pending Leaves</h3>
+                            <div class="value">2</div>
+                        </div>
+                        <div class="stat-card taken">
+                            <h3>Taken Leaves</h3>
+                            <div class="value">5</div>
+                        </div>
+                        <div class="stat-card remaining">
+                            <h3>Remaining Leaves</h3>
+                            <div class="value">17</div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-calendar-plus me-2"></i>Apply for Leave</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="leaveForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="fromDate" class="form-label">From Date</label>
+                                        <input type="date" class="form-control" id="fromDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="toDate" class="form-label">To Date</label>
+                                        <input type="date" class="form-control" id="toDate" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="leaveType" class="form-label">Leave Type</label>
+                                    <select class="form-select" id="leaveType">
+                                        <option value="FullDay">Full Day</option>
+                                        <option value="HalfDay">Half Day</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reason" class="form-label">Reason</label>
+                                    <textarea class="form-control" id="reason" rows="3" required></textarea>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="total-days">Total Days: <span id="totalDays">1.0</span></div>
+                                    <button type="submit" class="btn btn-primary">Submit Leave Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-history me2"></i>Leave History</h5>
+            <div class="current-month">February 2025</div>
+        </div>
+        <div class="card-body">
+            <div id="leaveHistoryList" class="list-group">
+                <!-- Leave history items will be added here by JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- payroll section-->
+<div id="payrollSection" style="display: none;">
+    <div class="payroll-container">
+        
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="payslips">PAYSLIPS</button>
+            <button class="tab-button" data-tab="salary">SALARY STRUCTURE</button>
+        </div>
+
+        <!-- Month and Year section -->
+        <!-- Selectors -->
+        <div class="selectors">
+            <select id="yearSelect" class="select-box">
+            </select>
+            <select id="monthSelect" class="select-box">
+                <!-- Add other months -->
+            </select>
+        </div>
+
+        <!-- Payslip Section -->
+        <div id="payslipsTab" class="tabpay-content active">
+            <div class="payslip-container">
+                <div class="company-header">
+                    <img src="Cybromatech-logo.jpg" alt="Company Logo" class="company-logo">
+                    <div class="company-info">
+                        <h2>Cybromatech Technology Pvt Ltd</h2>
+                        <p>Marisoft Tech Park, Marisoft 1,4 FLOOR, KALYANI NAGAR, Pune, Maharashtra - 411014</p>
+                    </div>
+                </div>
+
+                <div class="employee-details">
+                    <div class="details-column">
+                        <div class="detail-row">
+                            <span class="label">Name:</span>
+                            <span>Vikas Patil</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Designation:</span>
+                            <span>Data Science</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Department:</span>
+                            <span>Software</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Location:</span>
+                            <span>Pune</span>
+                        </div>
+                    </div>
+                    <div class="details-column">
+                        <div class="detail-row">
+                            <span class="label">Employee ID:</span>
+                            <span>CTR/EMP1101</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Bank Name:</span>
+                            <span>YES BANK</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Bank Account No:</span>
+                            <span>1636085692014</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">PAN No.:</span>
+                            <span>HAOP658A</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="salary-details">
+                    <div class="earnings-section">
+                        <h3>Earnings</h3>
+                        <div class="amount-row">
+                            <span>Basic</span>
+                            <span>20000</span>
+                        </div>
+                        <div class="amount-row total">
+                            <span>Total Earnings (Rs)</span>
+                            <span>20000</span>
+                        </div>
+                    </div>
+
+                    <div class="deductions-section">
+                        <h3>Deductions</h3>
+                        <div class="amount-row">
+                            <span>Term Insurance</span>
+                            <span>1,000</span>
+                        </div>
+                        <div class="amount-row">
+                            <span>Health Insurance</span>
+                            <span>1,000</span>
+                        </div>
+                        <div class="amount-row">
+                            <span>PF Employee</span>
+                            <span>1,600</span>
+                        </div>
+                        <div class="amount-row">
+                            <span>PT</span>
+                            <span>200</span>
+                        </div>
+                        <div class="amount-row total">
+                            <span>Total Deductions (Rs)</span>
+                            <span>3,800</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="net-pay">
+                    <div class="amount-row">
+                        <span>Net Pay For The Month:</span>
+                        <span>16,200</span>
+                    </div>
+                    <p class="amount-in-words">(Sixteen Thousand Two Hundred Rupees Only)</p>
+                </div>
+
+                
+
+                <button id="downloadBtn" class="download-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download
+                </button>
+            </div>
+        </div>
+
+        <!-- Salary Structure Section -->
+        <div id="salaryTab" class="tabpay-content">
+            <div class="salary-structure">
+                <div class="structure-header">
+                    <h2>Current Salary</h2>
+                    <div class="effective-date">
+                        <span>Effective Date</span>
+                        <strong>Oct. 01, 2024</strong>
+                    </div>
+                </div>
+
+                <table class="salary-table">
+                    <thead>
+                        <tr>
+                            <th>Components</th>
+                            <th>Monthly</th>
+                            <th>Annual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td>GROSS</td>
+                            <td>15,000</td>
+                            <td>1,80,000</td>
+                        </tr>
+                        <tr>
+                            <td>Basic</td>
+                            <td>15,000</td>
+                            <td>1,80,000</td>
+                        </tr>
+                        <tr>
+                            <td>HRA</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr> -->
+                        <!-- Add other salary components -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<!--  -->
+<div id="resignationRecords" style="display: none;">
+    <div class="card mb-4">
+      <div class="card-header">
+        <div style="display: flex; align-items: center; ">
+            <h5 class="mb-0"><i class="fas fa-user-slash me-2"></i> Resignation Records</h5> 
+            <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#exitFormModal">
+                 Add Resignation
+            </button>
+           
+        </div>
+        
+           
+        <!--  -->
+      </div>
+      <div class="card-body">
+        
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="resignationTableBody">
+              <!-- Resignation records will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+<!--  -->
+</div>
+</div>
+</div>
+
+</div>
+<!--  -->
+
+<div class="modal fade " id="exitFormModal" tabindex="-1" aria-labelledby="exitFormLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exitFormLabel">Employee Resignation Form
+</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<form>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Employee ID</label>
+            <input type="text" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Department</label>
+            <input type="text" class="form-control">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Designation</label>
+            <input type="text" class="form-control">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Date of Joining</label>
+            <input type="date" class="form-control">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Last Working Day</label>
+            <input type="date" class="form-control">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Reason for Resignation</label>
+            <select class="form-select">
+                <option>Personal Reasons</option>
+                <option>Career Growth</option>
+                <option>Health Issues</option>
+                <option>Relocation</option>
+                <option>Work Environment</option>
+                <option>Other</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Specify if Other</label>
+            <input type="text" class="form-control" placeholder="Specify if Other">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Notice Period Served</label>
+            <div>
+                <input type="radio" name="notice" value="Yes"> Yes
+                <input type="radio" name="notice" value="No" class="ms-3"> No
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Manager’s Name</label>
+            <input type="text" class="form-control">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Feedback on Work Experience</label>
+            <textarea class="form-control"></textarea>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Suggestions for Improvement</label>
+            <textarea class="form-control"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Clearance Status</label>
+            <div>
+                <input type="checkbox"> IT Clearance
+                <input type="checkbox" class="ms-3"> HR Clearance
+                <input type="checkbox" class="ms-3"> Finance Clearance
+                <input type="checkbox" class="ms-3"> Manager Approval
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Employee Signature</label>
+            <input type="file" class="form-control" accept="image/*">
+            <small class="text-muted">Upload an image of your signature (JPG, PNG).</small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control">
+        </div>
+    </div>
+</form>
+
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary">Submit</button>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+

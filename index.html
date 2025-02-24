@@ -3,518 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRMS Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .btn-primary {
+            background: #4b6cb7;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #3b5998;
+        }
+    </style>
 </head>
 <body>
-    <div class="d-flex" id="wrapper">
-        <!-- Sidebar -->
-        <div class="bg-white" id="sidebar-wrapper">
-            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-                <i class="fas fa-user-tie me-2"></i>HRMS
+    <div class="login-container">
+        <h3 class="text-center">Login</h3>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="role" class="form-label">Select Role</label>
+                <select class="form-select" id="role" required>
+                    <option value="">Choose...</option>
+                    <option value="admin">Admin</option>
+                    <option value="super-admin">Super Admin</option>
+                    <option value="employee">Employee</option>
+                </select>
+                <div class="invalid-feedback">Please select a role.</div>
             </div>
-            <div class="list-group list-group-flush my-3">
-                <a href="index.html" class="list-group-item list-group-item-action bg-transparent second-text active">
-                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" id="attendanceLink">
-                    <i class="fa-regular fa-circle-check me-2"></i>Attendance
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-clock me-2"></i>Leave Status
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-calendar-alt me-2"></i>Holiday Calender
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-chart-line me-2"></i>Reports
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fa-solid fa-indian-rupee-sign me-2"></i>Payroll
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-sign-out-alt me-2"></i>Resignation
-                </a>
-                <a href="login.html" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold">
-                    <i class="fas fa-power-off me-2"></i>Logout
-                </a>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" required>
+                <div class="invalid-feedback">Please enter a valid email.</div>
             </div>
-        </div>
-
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
-                    <h2 class="fs-2 m-0">Dashboard</h2>
-                </div>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
-                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user me-2"></i>Vikas Patil
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#" onclick="showProfileForm()">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><a class="dropdown-item" href="login.html">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <!-- Main Content -->
-            <div class="container-fluid px-4">
-                <!-- Profile Section -->
-                <div id="profileSection" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <div class="card profile-card">
-                                <div class="card-body text-center">
-                                    <div class="position-relative d-inline-block mb-3">
-                                        <img id="profileImage" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-04%20102351-FA54c698dRbXg5E6hJ21LqPkTajQ43.png" alt="Profile" class="rounded-circle img-fluid" width="150" height="150">
-                                        <label for="profilePhotoInput" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2 cursor-pointer">
-                                            <i class="fas fa-camera"></i>
-                                        </label>
-                                        <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*" onchange="updateProfilePhoto(event)">
-                                    </div>
-                                    <h3 class="mb-1">Vikas Patil</h3>
-                                    <p class="text-muted mb-3">Sr. Software Developer</p>
-                                    <div class="d-flex justify-content-center mb-3">
-                                        <a href="#" class="btn btn-outline-light me-2"><i class="fab fa-facebook-f"></i></a>
-                                        <a href="#" class="btn btn-outline-light me-2"><i class="fab fa-twitter"></i></a>
-                                        <a href="#" class="btn btn-outline-light"><i class="fab fa-linkedin-in"></i></a>
-                                    </div>
-                                    <div class="text-start">
-                                        <p><i class="fas fa-phone-alt me-2"></i>+91 1234567890</p>
-                                        <p><i class="fas fa-envelope me-2"></i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fead8a9b8e9b8c9a9bcfcccabe9b869f938e929bd09d9193">[email&#160;protected]</a></p>
-                                        <p><i class="fas fa-calendar-alt me-2"></i>Joined on 15 Jan 2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-body">
-                                    <ul class="nav nav-tabs" id="profileTabs" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab" aria-controls="personal" aria-selected="true">Personal Info</button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab" aria-controls="bank" aria-selected="false">Bank Details</button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">Documents</button>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content mt-3" id="profileTabsContent">
-                                        <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
-                                            <form>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">First Name</label>
-                                                        <input type="text" class="form-control" value="Vikas">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Last Name</label>
-                                                        <input type="text" class="form-control" value="Patil">
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Email</label>
-                                                        <input type="email" class="form-control" value="vikas.patil@example.com">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Phone No.</label>
-                                                        <input type="tel" class="form-control" value="+91 1234567890">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Address</label>
-                                                    <input type="text" class="form-control" value="123 Main St, Mumbai, Maharashtra">
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4">
-                                                        <label class="form-label">City</label>
-                                                        <input type="text" class="form-control" value="Mumbai">
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="form-label">State</label>
-                                                        <input type="text" class="form-control" value="Maharashtra">
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="form-label">Postal Code</label>
-                                                        <input type="text" class="form-control" value="400001">
-                                                    </div>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                                            </form>
-                                        </div>
-                                        <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
-                                            <form>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Bank Name</label>
-                                                    <input type="text" class="form-control">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Account Number</label>
-                                                    <input type="text" class="form-control">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">IFSC Code</label>
-                                                    <input type="text" class="form-control">
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Save Bank Details</button>
-                                            </form>
-                                        </div>
-                                        <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
-                                            <form>
-                                                <div class="mb-3">
-                                                    <label class="form-label">ID Proof</label>
-                                                    <input type="file" class="form-control">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Address Proof</label>
-                                                    <input type="file" class="form-control">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">SSC Marksheet</label>
-                                                    <input type="file" class="form-control" multiple>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">HSC/Diploma Marksheet</label>
-                                                    <input type="file" class="form-control" multiple>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">UG (BE,BTECH) Marksheet</label>
-                                                    <input type="file" class="form-control" multiple>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">PG Marksheet</label>
-                                                    <input type="file" class="form-control" multiple>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Your Resume</label>
-                                                    <input type="file" class="form-control" multiple>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Upload Documents</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dashboard Content -->
-                <div id="dashboardContent">
-                    <!-- Notification Banner -->
-                    <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>Your Leave Request for "24th April 2024" has been Approved!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-
-                    <!-- Quick Stats -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="card bg-primary text-white h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Hours Today</h5>
-                                    <p class="card-text display-4">8.36</p>
-                                    <p class="card-text"><small>Target: 9 hours</small></p>
-                                </div>
-                                <div class="card-footer d-flex">
-                                    View Details
-                                    <span class="ms-auto">
-                                        <i class="fas fa-arrow-up"></i>
-                                        5%
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card bg-success text-white h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Hours Week</h5>
-                                    <p class="card-text display-4">10</p>
-                                    <p class="card-text"><small>Target: 40 hours</small></p>
-                                </div>
-                                <div class="card-footer d-flex">
-                                    View Details
-                                    <span class="ms-auto">
-                                        <i class="fas fa-arrow-up"></i>
-                                        7%
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card bg-warning text-dark h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Hours Month</h5>
-                                    <p class="card-text display-4">75</p>
-                                    <p class="card-text"><small>Target: 98 hours</small></p>
-                                </div>
-                                <div class="card-footer d-flex">
-                                    View Details
-                                    <span class="ms-auto">
-                                        <i class="fas fa-arrow-down"></i>
-                                        8%
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card bg-info text-white h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Overtime this Month</h5>
-                                    <p class="card-text display-4">16</p>
-                                    <p class="card-text"><small>Limit: 28 hours</small></p>
-                                </div>
-                                <div class="card-footer d-flex">
-                                    View Details
-                                    <span class="ms-auto">
-                                        <i class="fas fa-arrow-down"></i>
-                                        6%
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Punch In/Out Section -->
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Attendance</h5>
-                                    <p id="punchStatus" class="card-text">You haven't punched in yet.</p>
-                                    <button id="punchButton" class="btn btn-primary">Punch In</button>
-                                    <p id="punchDateTime" class="card-text mt-2"></p>
-                                    <p id="punchTime" class="card-text mt-2"></p>
-                                    <div id="selfieContainer" class="mt-3" style="display: none;">
-                                        <video id="video" width="320" height="240" style="display: none;"></video>
-                                        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
-                                        <img id="selfieImage" src="/placeholder.svg" alt="Selfie" style="display: none; max-width: 320px; max-height: 240px;">
-                                        <br>
-                                        <button id="captureButton" class="btn btn-secondary mt-2">Capture Selfie</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Main Dashboard Sections -->
-                    <div class="row">
-                        <!-- Left Column -->
-                        <div class="col-md-8">
-                            <!-- Announcements -->
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Announcements</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="mb-0">New Project Kickoff</h6>
-                                                <small class="text-muted">Join us for the kickoff meeting of Project X</small>
-                                            </div>
-                                            <span class="badge bg-primary rounded-pill">Today</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="mb-0">Team Building Event</h6>
-                                                <small class="text-muted">Get ready for fun activities and team bonding</small>
-                                            </div>
-                                            <span class="badge bg-primary rounded-pill">Tomorrow</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="mb-0">Quarterly Review Meeting</h6>
-                                                <small class="text-muted">Prepare your reports for the quarterly review</small>
-                                            </div>
-                                            <span class="badge bg-primary rounded-pill">Next Week</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- Leave Details -->
-                            <div class="card mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Leave Details</h5>
-                                    <span class="text-muted">2024</span>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <canvas id="attendanceChart"></canvas>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="stats-list">
-                                                <div class="stat-item">
-                                                    <span class="dot bg-primary"></span>
-                                                    <span>1254 on time</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="dot bg-warning"></span>
-                                                    <span>32 Late Attendance</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="dot bg-success"></span>
-                                                    <span>658 Work From Home</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="dot bg-danger"></span>
-                                                    <span>14 Absent</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="dot bg-info"></span>
-                                                    <span>68 Sick Leave</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Column -->
-                        <div class="col-md-4">
-                            <!-- Today's Quote -->
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-quote-left me-2"></i>Today's Quote</h5>
-                                </div>
-                                <div class="card-body">
-                                    <blockquote class="blockquote mb-0">
-                                        <p>"The only way to do great work is to love what you do."</p>
-                                        <footer class="blockquote-footer">Steve Jobs</footer>
-                                    </blockquote>
-                                </div>
-                            </div>
-
-                            <!-- Notifications -->
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-bell me-2"></i>Notifications</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <strong>Leave Request Approved</strong>
-                                                <p class="mb-0 text-muted">Your leave request for May 15th has been approved.</p>
-                                            </div>
-                                            <span class="badge bg-success">New</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <strong>Payslip Generated</strong>
-                                                <p class="mb-0 text-muted">Your April payslip is now available for download.</p>
-                                            </div>
-                                            <span class="badge bg-info">1d ago</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <strong>Team Meeting Reminder</strong>
-                                                <p class="mb-0 text-muted">Don't forget about the team meeting at 3 PM today.</p>
-                                            </div>
-                                            <span class="badge bg-warning">2h ago</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- Today's Birthdays -->
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-birthday-cake me-2"></i>Today's Birthdays</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex align-items-center">
-                                            <img src="/placeholder.svg?height=40&width=40" alt="John Doe" class="rounded-circle me-3" width="40" height="40">
-                                            <div>
-                                                <h6 class="mb-0">John Doe</h6>
-                                                <small class="text-muted">UI/UX Designer</small>
-                                            </div>
-                                        </li>
-                                        <li class="list-group-item d-flex align-items-center">
-                                            <img src="/placeholder.svg?height=40&width=40" alt="Jane Smith" class="rounded-circle me-3" width="40" height="40">
-                                            <div>
-                                                <h6 class="mb-0">Jane Smith</h6>
-                                                <small class="text-muted">Project Manager</small>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Attendance Records -->
-                    <div id="attendanceRecords" style="display: none;">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Attendance Records</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Punch In Time</th>
-                                                <th>Punch In Selfie</th>
-                                                <th>Punch Out Time</th>
-                                                <th>Punch Out Selfie</th>
-                                                <th>Total Time</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="attendanceTableBody">
-                                            <!-- Attendance records will be dynamically added here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required minlength="6">
+                <div class="invalid-feedback">Password must be at least 6 characters long.</div>
             </div>
-        </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <div id="error-message" class="text-danger mt-2 text-center" style="display: none;">Wrong Credentials. Enter Again.</div>
+        </form>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
     <script>
-    function updateProfilePhoto(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('profileImage').src = e.target.result;
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let role = document.getElementById("role").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let errorMessage = document.getElementById("error-message");
+
+            const credentials = {
+                "admin": { email: "admin@gmail.com", password: "Admin123", dashboard: "admin_dashboard.html" },
+                "super-admin": { email: "superadmin@gmail.com", password: "Superadmin123", dashboard: "superadmin_dashboard.html" },
+                "employee": { email: "emp@gmail.com", password: "Emp123", dashboard: "Dashboard.html" }
+            };
+
+            if (credentials[role] && credentials[role].email === email && credentials[role].password === password) {
+                // Set a flag in localStorage to indicate the user is logged in
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = credentials[role].dashboard;
+            } else {
+                errorMessage.style.display = "block";
             }
-            reader.readAsDataURL(file);
-        }
-    }
+        });
     </script>
 </body>
 </html>

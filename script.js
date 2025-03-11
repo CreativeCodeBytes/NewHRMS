@@ -1,48 +1,61 @@
-// Toggle Sidebar
+/********************************************
+ * SIDEBAR TOGGLE FUNCTIONALITY
+ ********************************************/
 const el = document.getElementById("wrapper")
 const toggleButton = document.getElementById("menu-toggle")
 
 toggleButton.onclick = () => {
   el.classList.toggle("toggled")
 }
+/* END SIDEBAR TOGGLE FUNCTIONALITY */
 
-// Attendance Chart
+
+/********************************************
+ * ATTENDANCE CHART
+ ********************************************/
 document.addEventListener("DOMContentLoaded", () => {
-  var ctx = document.getElementById("attendanceChart").getContext("2d")
-  var myChart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: ["On Time", "Late", "WFH", "Absent", "Sick Leave"],
-      datasets: [
-        {
-          data: [1254, 32, 658, 14, 68],
-          backgroundColor: ["#4e73df", "#f6c23e", "#1cc88a", "#e74a3b", "#36b9cc"],
-          hoverBackgroundColor: ["#2e59d9", "#dda20a", "#13855c", "#be2617", "#2a96a5"],
-          hoverBorderColor: "rgba(234, 236, 244, 1)",
+  var ctx = document.getElementById("attendanceChart")
+  if (ctx) {
+    ctx = ctx.getContext("2d")
+    var myChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["On Time", "Late", "WFH", "Absent", "Sick Leave"],
+        datasets: [
+          {
+            data: [1254, 32, 658, 14, 68],
+            backgroundColor: ["#4e73df", "#f6c23e", "#1cc88a", "#e74a3b", "#36b9cc"],
+            hoverBackgroundColor: ["#2e59d9", "#dda20a", "#13855c", "#be2617", "#2a96a5"],
+            hoverBorderColor: "rgba(234, 236, 244, 1)",
+          },
+        ],
+      },
+      options: {
+        maintainAspectRatio: false,
+        tooltips: {
+          backgroundColor: "rgb(255,255,255)",
+          bodyFontColor: "#858796",
+          borderColor: "#dddfeb",
+          borderWidth: 1,
+          xPadding: 15,
+          yPadding: 15,
+          displayColors: false,
+          caretPadding: 10,
         },
-      ],
-    },
-    options: {
-      maintainAspectRatio: false,
-      tooltips: {
-        backgroundColor: "rgb(255,255,255)",
-        bodyFontColor: "#858796",
-        borderColor: "#dddfeb",
-        borderWidth: 1,
-        xPadding: 15,
-        yPadding: 15,
-        displayColors: false,
-        caretPadding: 10,
+        legend: {
+          display: false,
+        },
+        cutoutPercentage: 80,
       },
-      legend: {
-        display: false,
-      },
-      cutoutPercentage: 80,
-    },
-  })
+    })
+  }
 })
+/* END ATTENDANCE CHART */
 
-// Profile Photo Update
+
+/********************************************
+ * PROFILE PHOTO UPDATE
+ ********************************************/
 function updateProfilePhoto(event) {
   const file = event.target.files[0]
   if (file) {
@@ -53,8 +66,12 @@ function updateProfilePhoto(event) {
     reader.readAsDataURL(file)
   }
 }
+/* END PROFILE PHOTO UPDATE */
 
-// Punch In/Out Functionality
+
+/********************************************
+ * PUNCH IN/OUT FUNCTIONALITY
+ ********************************************/
 let isPunchedIn = false
 let punchInTime = null
 let timerInterval = null
@@ -89,57 +106,61 @@ function saveAttendance(type, time, imageDataUrl) {
   displayAttendance()
 }
 
-punchButton.addEventListener("click", () => {
-  if (!isPunchedIn) {
-    // Punch In
-    isPunchedIn = true
-    punchInTime = new Date()
-    punchButton.textContent = "Punch Out"
-    punchStatus.textContent = "You are currently punched in."
-    punchDateTime.textContent = `Punch In: ${formatDateTime(punchInTime)}`
-    timerInterval = setInterval(updateTimer, 1000)
-    selfieContainer.style.display = "block"
-    startCamera()
-    video.style.display = "block"
-    captureButton.style.display = "inline-block"
-    selfieImage.style.display = "none"
-    punchButton.classList.add("btn-danger")
-    punchButton.classList.remove("btn-primary")
-  } else {
-    // Punch Out
-    isPunchedIn = false
-    clearInterval(timerInterval)
-    const punchOutTime = new Date()
-    punchButton.textContent = "Punch In"
-    punchStatus.textContent = "You have punched out."
-    punchDateTime.textContent += ` | Punch Out: ${formatDateTime(punchOutTime)}`
-    punchTime.textContent = `Total time: ${punchTime.textContent.split(": ")[1]}`
-    selfieContainer.style.display = "block"
-    startCamera()
-    video.style.display = "block"
-    captureButton.style.display = "inline-block"
-    selfieImage.style.display = "none"
-    punchButton.classList.add("btn-primary")
-    punchButton.classList.remove("btn-danger")
-  }
-})
+if (punchButton) {
+  punchButton.addEventListener("click", () => {
+    if (!isPunchedIn) {
+      // Punch In
+      isPunchedIn = true
+      punchInTime = new Date()
+      punchButton.textContent = "Punch Out"
+      punchStatus.textContent = "You are currently punched in."
+      punchDateTime.textContent = `Punch In: ${formatDateTime(punchInTime)}`
+      timerInterval = setInterval(updateTimer, 1000)
+      selfieContainer.style.display = "block"
+      startCamera()
+      video.style.display = "block"
+      captureButton.style.display = "inline-block"
+      selfieImage.style.display = "none"
+      punchButton.classList.add("btn-danger")
+      punchButton.classList.remove("btn-primary")
+    } else {
+      // Punch Out
+      isPunchedIn = false
+      clearInterval(timerInterval)
+      const punchOutTime = new Date()
+      punchButton.textContent = "Punch In"
+      punchStatus.textContent = "You have punched out."
+      punchDateTime.textContent += ` | Punch Out: ${formatDateTime(punchOutTime)}`
+      punchTime.textContent = `Total time: ${punchTime.textContent.split(": ")[1]}`
+      selfieContainer.style.display = "block"
+      startCamera()
+      video.style.display = "block"
+      captureButton.style.display = "inline-block"
+      selfieImage.style.display = "none"
+      punchButton.classList.add("btn-primary")
+      punchButton.classList.remove("btn-danger")
+    }
+  })
+}
 
-captureButton.addEventListener("click", () => {
-  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height)
-  const imageDataUrl = canvas.toDataURL("image/jpeg")
+if (captureButton) {
+  captureButton.addEventListener("click", () => {
+    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height)
+    const imageDataUrl = canvas.toDataURL("image/jpeg")
 
-  // Display the captured image
-  selfieImage.src = imageDataUrl
-  selfieImage.style.display = "block"
-  video.style.display = "none"
-  captureButton.style.display = "none"
+    // Display the captured image
+    selfieImage.src = imageDataUrl
+    selfieImage.style.display = "block"
+    video.style.display = "none"
+    captureButton.style.display = "none"
 
-  // Stop the camera
-  stopCamera()
+    // Stop the camera
+    stopCamera()
 
-  // Save attendance data
-  saveAttendance(isPunchedIn ? "punch_in" : "punch_out", new Date(), imageDataUrl)
-})
+    // Save attendance data
+    saveAttendance(isPunchedIn ? "punch_in" : "punch_out", new Date(), imageDataUrl)
+  })
+}
 
 function startCamera() {
   navigator.mediaDevices
@@ -155,57 +176,63 @@ function startCamera() {
 
 function stopCamera() {
   const stream = video.srcObject
-  const tracks = stream.getTracks()
-
-  tracks.forEach((track) => {
-    track.stop()
-  })
-
-  video.srcObject = null
+  if (stream) {
+    const tracks = stream.getTracks()
+    tracks.forEach((track) => {
+      track.stop()
+    })
+    video.srcObject = null
+  }
 }
 
 function displayAttendance() {
   const attendance = JSON.parse(localStorage.getItem("attendance") || "[]")
   const attendanceTableBody = document.getElementById("attendanceTableBody")
-  attendanceTableBody.innerHTML = ""
+  if (attendanceTableBody) {
+    attendanceTableBody.innerHTML = ""
 
-  attendance.forEach((record, index) => {
-    if (index % 2 === 0) {
-      const row = attendanceTableBody.insertRow()
-      const dateCell = row.insertCell(0)
-      const punchInTimeCell = row.insertCell(1)
-      const punchInSelfieCell = row.insertCell(2)
-      const punchOutTimeCell = row.insertCell(3)
-      const punchOutSelfieCell = row.insertCell(4)
-      const totalTimeCell = row.insertCell(5)
+    attendance.forEach((record, index) => {
+      if (index % 2 === 0) {
+        const row = attendanceTableBody.insertRow()
+        const dateCell = row.insertCell(0)
+        const punchInTimeCell = row.insertCell(1)
+        const punchInSelfieCell = row.insertCell(2)
+        const punchOutTimeCell = row.insertCell(3)
+        const punchOutSelfieCell = row.insertCell(4)
+        const totalTimeCell = row.insertCell(5)
 
-      dateCell.textContent = new Date(record.time).toLocaleDateString()
-      punchInTimeCell.textContent = new Date(record.time).toLocaleTimeString()
-      punchInSelfieCell.innerHTML = `<img src="${record.imageDataUrl}" alt="Punch In Selfie" width="50" height="50">`
+        dateCell.textContent = new Date(record.time).toLocaleDateString()
+        punchInTimeCell.textContent = new Date(record.time).toLocaleTimeString()
+        punchInSelfieCell.innerHTML = `<img src="${record.imageDataUrl}" alt="Punch In Selfie" width="50" height="50">`
 
-      if (attendance[index + 1]) {
-        const punchOutRecord = attendance[index + 1]
-        punchOutTimeCell.textContent = new Date(punchOutRecord.time).toLocaleTimeString()
-        punchOutSelfieCell.innerHTML = `<img src="${punchOutRecord.imageDataUrl}" alt="Punch Out Selfie" width="50" height="50">`
+        if (attendance[index + 1]) {
+          const punchOutRecord = attendance[index + 1]
+          punchOutTimeCell.textContent = new Date(punchOutRecord.time).toLocaleTimeString()
+          punchOutSelfieCell.innerHTML = `<img src="${punchOutRecord.imageDataUrl}" alt="Punch Out Selfie" width="50" height="50">`
 
-        const punchInTime = new Date(record.time)
-        const punchOutTime = new Date(punchOutRecord.time)
-        const timeDiff = punchOutTime - punchInTime
-        const hours = Math.floor(timeDiff / 3600000)
-        const minutes = Math.floor((timeDiff % 3600000) / 60000)
-        totalTimeCell.textContent = `${hours}h ${minutes}m`
+          const punchInTime = new Date(record.time)
+          const punchOutTime = new Date(punchOutRecord.time)
+          const timeDiff = punchOutTime - punchInTime
+          const hours = Math.floor(timeDiff / 3600000)
+          const minutes = Math.floor((timeDiff % 3600000) / 60000)
+          totalTimeCell.textContent = `${hours}h ${minutes}m`
+        }
       }
-    }
-  })
+    })
+  }
 }
+/* END PUNCH IN/OUT FUNCTIONALITY */
 
-// Calendar Functionality
+
+/********************************************
+ * CALENDAR FUNCTIONALITY
+ ********************************************/
 const holidays = {
   "01-01": { name: "New Year's Day", type: "Mandatory" },
   "01-14": { name: "Makar Sankranti", type: "Optional" },
   "01-26": { name: "Republic Day", type: "Mandatory" },
   "02-19": { name: "Shivaji Jayanti", type: "Optional" },
-  "03-14": { name: "Holi", type: "Mandatory" },
+  "03-14": { name: "Dhuliwandan", type: "Mandatory" },
   "03-31": { name: "Ramzan Id", type: "Mandatory" },
   "04-14": { name: "Ambedkar Jayanti", type: "Mandatory" },
   "04-18": { name: "Good Friday", type: "Mandatory" },
@@ -224,6 +251,8 @@ const currentDate = new Date()
 function renderCalendar() {
   const monthYear = document.getElementById("monthYear")
   const calendar = document.getElementById("calendar")
+  if (!monthYear || !calendar) return
+
   calendar.innerHTML = ""
 
   const firstDayIndex = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
@@ -275,17 +304,28 @@ function renderCalendar() {
   }
 }
 
-document.getElementById("prevMonth").addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() - 1)
-  renderCalendar()
-})
+const prevMonthBtn = document.getElementById("prevMonth")
+const nextMonthBtn = document.getElementById("nextMonth")
 
-document.getElementById("nextMonth").addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() + 1)
-  renderCalendar()
-})
+if (prevMonthBtn) {
+  prevMonthBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1)
+    renderCalendar()
+  })
+}
 
-// Navigation Functions
+if (nextMonthBtn) {
+  nextMonthBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1)
+    renderCalendar()
+  })
+}
+/* END CALENDAR FUNCTIONALITY */
+
+
+/********************************************
+ * NAVIGATION FUNCTIONS
+ ********************************************/
 function showProfileForm() {
   document.getElementById("profileSection").style.display = "block"
   document.getElementById("dashboardContent").style.display = "none"
@@ -340,6 +380,7 @@ function showResignation() {
   document.getElementById("leaveSection").style.display = "none"
   document.getElementById("resignationRecords").style.display = "block"
   document.getElementById("payrollSection").style.display = "none"
+  displayResignation()
 }
 
 function showPayroll() {
@@ -364,8 +405,12 @@ function showHolidayCalendar() {
   document.getElementById("payrollSection").style.display = "none"
   renderCalendar()
 }
+/* END NAVIGATION FUNCTIONS */
 
-// Event Listeners
+
+/********************************************
+ * EVENT LISTENERS
+ ********************************************/
 document.addEventListener("DOMContentLoaded", () => {
   showDashboard()
 
@@ -398,9 +443,22 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault()
     showHolidayCalendar()
   })
-})
 
-// Reports Functionality
+  // Resignation Form Submission
+  const submitResignationBtn = document.getElementById("submitResignation")
+  if (submitResignationBtn) {
+    submitResignationBtn.addEventListener("click", saveResignation)
+  }
+
+  // Initialize resignation records display
+  displayResignation()
+})
+/* END EVENT LISTENERS */
+
+
+/********************************************
+ * REPORTS FUNCTIONALITY
+ ********************************************/
 function generateReport() {
   const reportType = document.getElementById("reportType").value
   const dateRange = document.getElementById("dateRange").value
@@ -456,8 +514,12 @@ function downloadReport() {
   alert("Downloading report as PDF...")
   // Implement actual PDF download functionality here
 }
+/* END REPORTS FUNCTIONALITY */
 
-// Leave Management Functionality
+
+/********************************************
+ * LEAVE MANAGEMENT FUNCTIONALITY
+ ********************************************/
 const leaveSection = document.getElementById("leaveSection")
 const leaveForm = document.getElementById("leaveForm")
 const leaveHistoryList = document.getElementById("leaveHistoryList")
@@ -483,6 +545,8 @@ function showLeaveSection() {
 }
 
 function renderLeaveHistory() {
+  if (!leaveHistoryList) return
+  
   leaveHistoryList.innerHTML = ""
   leaveHistory.forEach((leave) => {
     const leaveItem = document.createElement("div")
@@ -566,10 +630,12 @@ document.addEventListener("DOMContentLoaded", () => {
 const currentMonthElement = document.querySelector(".current-month")
 const currentMonth = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })
 currentMonthElement.textContent = currentMonth
+/* END LEAVE MANAGEMENT FUNCTIONALITY */
 
 
-
-// payroll functinality
+/********************************************
+ * START PAYROLL FUNCTIONALITY
+ ********************************************/
 document.addEventListener('DOMContentLoaded', function() {
   // Tab Switching Logic
   const tabButtons = document.querySelectorAll('.tab-button');
@@ -743,13 +809,16 @@ document.addEventListener('DOMContentLoaded', function() {
       salaryTableBody.appendChild(tr);
   });
 });
+/* END PAYROLL FUNCTIONALITY */
 
 
-
-//Resignation  functionality
+/********************************************
+ * START RESIGNATION FUNCTIONALITY
+ ********************************************/
 document.addEventListener("DOMContentLoaded", () => {
   const resignationLink = document.getElementById("resignationLink")
   const resignationRecords = document.getElementById("resignationRecords")
+  const dashboardContent = document.querySelectorAll(".dashboard-content")
   
   resignationLink.addEventListener("click", (e) => {
     e.preventDefault()
@@ -774,26 +843,168 @@ function groupResignationByDate(resignations) {
   }, {})
 }
 
+function saveResignation() {
+  // Get form values
+  const fullName = document.getElementById("fullName").value
+  const employeeId = document.getElementById("employeeId").value
+  const department = document.getElementById("department").value
+  const designation = document.getElementById("designation").value
+  const joiningDate = document.getElementById("joiningDate").value
+  const lastWorkingDay = document.getElementById("lastWorkingDay").value
+  const resignationReason = document.getElementById("resignationReason").value
+  const otherReason = document.getElementById("otherReason").value
+  const noticeYes = document.getElementById("noticeYes").checked
+  const noticeNo = document.getElementById("noticeNo").checked
+  const managerName = document.getElementById("managerName").value
+  const feedback = document.getElementById("feedback").value
+  const suggestions = document.getElementById("suggestions").value
+  const itClearance = document.getElementById("itClearance").checked
+  const hrClearance = document.getElementById("hrClearance").checked
+  const financeClearance = document.getElementById("financeClearance").checked
+  const managerApproval = document.getElementById("managerApproval").checked
+  const submissionDate = document.getElementById("submissionDate").value || new Date().toISOString().split('T')[0]
+
+  // Validate required fields
+  if (!fullName || !employeeId) {
+    alert("Please fill in all required fields")
+    return
+  }
+
+  // Create resignation object
+  const resignation = {
+    id: Date.now().toString(),
+    fullName,
+    employeeId,
+    department,
+    designation,
+    joiningDate,
+    lastWorkingDay,
+    reason: resignationReason === "Other" ? otherReason : resignationReason,
+    noticePeriod: noticeYes ? "Yes" : noticeNo ? "No" : "",
+    managerName,
+    feedback,
+    suggestions,
+    clearance: {
+      it: itClearance,
+      hr: hrClearance,
+      finance: financeClearance,
+      manager: managerApproval
+    },
+    date: submissionDate,
+    status: "Pending",
+    submittedOn: new Date().toISOString()
+  }
+
+  // Save to localStorage
+  const resignations = JSON.parse(localStorage.getItem("resignations") || "[]")
+  resignations.push(resignation)
+  localStorage.setItem("resignations", JSON.stringify(resignations))
+
+  // Close modal and refresh table
+  const modalElement = document.getElementById('exitFormModal');
+  const modal = bootstrap.Modal.getInstance(modalElement);
+  modal.hide()
+  
+  // Reset form
+  document.getElementById("resignationForm").reset()
+  
+  // Display updated resignation records
+  displayResignation()
+  
+  // Show success message
+  alert("Resignation submitted successfully!")
+}
+
 function displayResignation() {
   const resignations = JSON.parse(localStorage.getItem("resignations") || "[]")
   const resignationTableBody = document.getElementById("resignationTableBody")
+  
+  if (!resignationTableBody) return
+  
   resignationTableBody.innerHTML = ""
 
-  const groupedResignations = groupResignationByDate(resignations)
-
-  for (const [date, records] of Object.entries(groupedResignations)) {
-    records.forEach((record) => {
-      const row = document.createElement("tr")
-      row.innerHTML = `
-            <td>${date}</td>
-            
-            <td>${record.reason || "No reason provided"}</td>
-            <td>${record.status || "Pending"}</td>
-        `
-      resignationTableBody.appendChild(row)
-    })
+  if (resignations.length === 0) {
+    const row = document.createElement("tr")
+    row.innerHTML = `<td colspan="4" class="text-center">No resignation records found</td>`
+    resignationTableBody.appendChild(row)
+    return
   }
+
+  resignations.forEach((record) => {
+    const row = document.createElement("tr")
+    row.innerHTML = `
+      <td>${new Date(record.date).toLocaleDateString()}</td>
+      <td>${record.reason || "No reason provided"}</td>
+      <td><span class="badge bg-${record.status === "Approved" ? "success" : record.status === "Rejected" ? "danger" : "warning"}">${record.status}</span></td>
+      <td><button class="btn btn-sm btn-info view-resignation" data-id="${record.id}">View</button></td>
+    `
+    resignationTableBody.appendChild(row)
+  })
+
+  // Add event listeners to view buttons
+  document.querySelectorAll(".view-resignation").forEach(button => {
+    button.addEventListener("click", (e) => {
+      const id = e.target.getAttribute("data-id")
+      viewResignationDetails(id)
+    })
+  })
 }
 
-document.addEventListener("DOMContentLoaded", displayResignation)
-
+function viewResignationDetails(id) {
+  const resignations = JSON.parse(localStorage.getItem("resignations") || "[]")
+  const resignation = resignations.find(r => r.id === id)
+  
+  if (!resignation) {
+    alert("Resignation record not found")
+    return
+  }
+  
+  const detailsBody = document.getElementById("resignationDetailsBody")
+  
+  detailsBody.innerHTML = `
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <h6>Employee Information</h6>
+        <p><strong>Name:</strong> ${resignation.fullName}</p>
+        <p><strong>Employee ID:</strong> ${resignation.employeeId}</p>
+        <p><strong>Department:</strong> ${resignation.department}</p>
+        <p><strong>Designation:</strong> ${resignation.designation}</p>
+      </div>
+      <div class="col-md-6">
+        <h6>Resignation Details</h6>
+        <p><strong>Date of Joining:</strong> ${resignation.joiningDate ? new Date(resignation.joiningDate).toLocaleDateString() : 'N/A'}</p>
+        <p><strong>Last Working Day:</strong> ${resignation.lastWorkingDay ? new Date(resignation.lastWorkingDay).toLocaleDateString() : 'N/A'}</p>
+        <p><strong>Reason:</strong> ${resignation.reason}</p>
+        <p><strong>Notice Period Served:</strong> ${resignation.noticePeriod}</p>
+      </div>
+    </div>
+    
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <h6>Feedback</h6>
+        <p><strong>Work Experience:</strong> ${resignation.feedback || 'No feedback provided'}</p>
+        <p><strong>Suggestions:</strong> ${resignation.suggestions || 'No suggestions provided'}</p>
+      </div>
+      <div class="col-md-6">
+        <h6>Clearance Status</h6>
+        <p><strong>IT Clearance:</strong> ${resignation.clearance?.it ? 'Completed' : 'Pending'}</p>
+        <p><strong>HR Clearance:</strong> ${resignation.clearance?.hr ? 'Completed' : 'Pending'}</p>
+        <p><strong>Finance Clearance:</strong> ${resignation.clearance?.finance ? 'Completed' : 'Pending'}</p>
+        <p><strong>Manager Approval:</strong> ${resignation.clearance?.manager ? 'Approved' : 'Pending'}</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <h6>Status Information</h6>
+        <p><strong>Current Status:</strong> <span class="badge bg-${resignation.status === "Approved" ? "success" : resignation.status === "Rejected" ? "danger" : "warning"}">${resignation.status}</span></p>
+        <p><strong>Submitted On:</strong> ${new Date(resignation.submittedOn).toLocaleString()}</p>
+      </div>
+    </div>
+  `
+  
+  // Show the modal
+  const modalView = new bootstrap.Modal(document.getElementById('viewResignationModal'))
+  modalView.show()
+}
+/* END RESIGNATION FUNCTIONALITY */

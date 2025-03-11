@@ -855,3 +855,78 @@ body {
 .tabpay-content.active {
   display: block;
 }
+
+
+
+
+
+
+
+
+/* Resignation */
+/* Resignation specific styles */
+#resignationRecords .table th {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+#resignationRecords .badge {
+  padding: 0.5em 0.75em;
+}
+
+#resignationDetailsBody h6 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e3e6f0;
+  padding-bottom: 0.5rem;
+}
+
+#resignationDetailsBody p {
+  margin-bottom: 0.5rem;
+}
+
+#resignationDetailsBody strong {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.view-resignation {
+  transition: all 0.3s ease;
+}
+
+.view-resignation:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: -100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .navbar-nav {
+    flex-direction: row;
+  }
+
+  .nav-item {
+    padding-right: 1rem;
+  }
+  
+  #resignationDetailsBody .row {
+    flex-direction: column;
+  }
+  
+  #resignationDetailsBody .col-md-6 {
+    margin-bottom: 1.5rem;
+  }
+}
